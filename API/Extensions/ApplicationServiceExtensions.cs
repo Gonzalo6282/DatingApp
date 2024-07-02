@@ -1,0 +1,28 @@
+﻿using API.Data;
+using API.Interfaces;
+using API.Services;
+using Microsoft.EntityFrameworkCore;
+
+namespace API.Extensions;
+
+//static class allows to use methods inside this class without having to create a new instance of this class
+public static class ApplicationServiceExtensions
+{
+    //add AddApplicationServices to the IServiceCollection 
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)//say what it is what we are extending with "this" keyword and call it services 
+    {
+        services.AddControllers();
+        //add dbcontext and pass class name DataContext from datacontext.cs file
+        services.AddDbContext<DataContext>(opt =>
+        {
+            opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
+        });
+        //add CORS 
+        services.AddCors();
+        //add Token service by adding interface ITokenService and implementation class TokenService
+        services.AddScoped<ITokenService, TokenService>();
+
+        return services;
+    }
+
+}

@@ -1,0 +1,10 @@
+<!--use interpolation {{}} to access title property fromm app.component.ts file -->
+<h1>{{ title }}</h1>
+
+<!--Display users-->
+<ul>
+  <!--loop for every user in the list do something-->
+  @for (user of users; track $index) {
+  <li>{{ user.id }} - {{ user.userName }}</li>
+  }
+</ul>
