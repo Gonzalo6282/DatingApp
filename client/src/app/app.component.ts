@@ -1,31 +1,29 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavComponent } from './nav/nav.component';
+import { AccountService } from './_services/account.service';
+import { HomeComponent } from './home/home.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  imports: [RouterOutlet, NavComponent, HomeComponent],
 })
 //Add implements OnInit in class component and Use quick fix
 export class AppComponent implements OnInit {
-  http = inject(HttpClient); //property http to inject HttpClient
-  title = 'DatingApp';
-  users: any; //add property users
+  private accountService = inject(AccountService); //property accountService to inject AccountService
 
   //move function to bottom
   ngOnInit(): void {
-    //make http get request
-    this.http.get('https:/localhost:5001/api/users').subscribe({
-      //add boiler plates of callback functions
-      //next: () => {},
-      next: (response) => (this.users = response), //response equals to  users response from API server
-      //error: () => {},
-      error: (error) => console.log(error),
-      //complete: () => {},
-      complete: () => console.log('Request has completed'),
-    });
+    this.setCurrentUser();
+  }
+
+  setCurrentUser() {
+    const userString = localStorage.getItem('user'); //check what is in local storage
+    if (!userString) return; //if not userString breakout out of function
+    const user = JSON.parse(userString); //parse userString
+    this.accountService.currentUser.set(user); //pass currentUsr signal
   }
 }

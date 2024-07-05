@@ -1,10 +1,6 @@
-<!--use interpolation {{}} to access title property fromm app.component.ts file -->
-<h1>{{ title }}</h1>
+<!-- selector: 'app-nav' from nav.component.ts file-->
+<app-nav></app-nav>
 
-<!--Display users-->
-<ul>
-  <!--loop for every user in the list do something-->
-  @for (user of users; track $index) {
-  <li>{{ user.id }} - {{ user.userName }}</li>
-  }
-</ul>
+<div class="container" style="margin-top: 100px">
+  <app-home></app-home>
+</div>
