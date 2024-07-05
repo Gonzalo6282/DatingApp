@@ -1,7 +1,8 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
   <div class="container">
-    App
-    <a class="navbar-brand" href="#">Dating App</a>
+    <a class="navbar-brand" routerLink="/" routerLinkActive="active"
+      >Dating App</a
+    >
     <!-- removing responsive functionality html becasue needs css done to work. Add later when finish proyect
     <button
       class="navbar-toggler"
@@ -20,15 +21,20 @@
     <!--use @if conditional to hide links is user is not logged in-->
     <ul class="navbar-nav me-auto mb-2 mb-md-0">
       @if(accountService.currentUser()){
-
       <li class="nav-item">
-        <a class="nav-link">Matches</a>
+        <a class="nav-link" routerLink="/members" routerLinkActive="active"
+          >Matches</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link">Lists</a>
+        <a class="nav-link" routerLink="/lists" routerLinkActive="active"
+          >Lists</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link">Messages</a>
+        <a class="nav-link" routerLink="/messages" routerLinkActive="active"
+          >Messages</a
+        >
       </li>
       }
     </ul>
@@ -36,8 +42,8 @@
     @if(accountService.currentUser()){
     <div class="dropdown" dropdown>
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle
-        >Welcome user</a
-      >
+        >Welcome {{ accountService.currentUser()?.username | titlecase }}
+      </a>
       <div class="dropdown-menu" *dropdownMenu>
         <a class="dropdown-item">Edit profile</a>
         <div class="dropdown-divider"></div>
@@ -65,7 +71,7 @@
         placeholder="Password"
         type="password"
       />
-      <button class="btn btn-outline-success" type="submit">Login</button>
+      <button class="btn btn-secondary" type="submit">Login</button>
     </form>
     }
     <!--</div>-->

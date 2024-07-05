@@ -1,6 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -10,6 +11,8 @@ import { AccountService } from '../_services/account.service';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  //inject toastr service
+  private toastr = inject(ToastrService);
   //inject accountService
   private accountService = inject(AccountService);
   //add signal cancel register in parent component
@@ -23,7 +26,7 @@ export class RegisterComponent {
         console.log(response);
         this.cancel(); //call cancel to close register form
       },
-      error: (error) => console.log(error),
+      error: (error) => this.toastr.error(error.error), //pass toastr to error
     });
   }
   //create function cancel
