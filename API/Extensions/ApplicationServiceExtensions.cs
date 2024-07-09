@@ -21,6 +21,10 @@ public static class ApplicationServiceExtensions
         services.AddCors();
         //add Token service by adding interface ITokenService and implementation class TokenService
         services.AddScoped<ITokenService, TokenService>();
+        //add UserRepository service by adding interface IUserRepository and implementation class UserRepository
+        services.AddScoped<IUserRepository, UserRepository>();
+        //add AddAutoMapper service
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         return services;
     }

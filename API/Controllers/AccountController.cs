@@ -18,23 +18,25 @@ public class AccountController(DataContext context, ITokenService tokenService) 
         //Add conditional passing UserExists() function and return BadRequest if username alrady exist
         if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
 
-        using var hmac = new HMACSHA512();//randomly generated key
+        return Ok();
 
-        var user = new AppUser///initialize properties of new AppUser
-        {
-            UserName = registerDto.Username.ToLower(),//Save in database as Tolower(), so we can later check that users can not use same username
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),//Create byte [] from password passed
-            PasswordSalt = hmac.Key//Hash again to scramble twice the passwords
-        };
+        //using var hmac = new HMACSHA512();//randomly generated key
 
-        context.Users.Add(user);//add user to database 
-        await context.SaveChangesAsync();//save changes to database
+        // var user = new AppUser///initialize properties of new AppUser
+        // {
+            // UserName = registerDto.Username.ToLower(),//Save in database as Tolower(), so we can later check that users can not use same username
+            // PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),//Create byte [] from password passed
+            // PasswordSalt = hmac.Key//Hash again to scramble twice the passwords
+        // };
 
-        return new UserDto //return new UserDto
-        {
-            Username = user.UserName,
-            Token = tokenService.CreateToken(user)
-        };
+        // context.Users.Add(user);//add user to database 
+        // await context.SaveChangesAsync();//save changes to database
+
+        // return new UserDto //return new UserDto
+        // {
+            // Username = user.UserName,
+            // Token = tokenService.CreateToken(user)
+        // };
     }
 
     [HttpPost("login")]//create login endpoint
