@@ -6,11 +6,12 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
 import { errorInterceptor } from './_interceptors/error.interceptor';
+import { jwtInterceptor } from './_interceptors/jwt.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([errorInterceptor])), //add http to providers
+    provideHttpClient(withInterceptors([errorInterceptor, jwtInterceptor])), //add http to providers
     provideAnimations(), //add animations to providers
     provideToastr({
       //add toastr to providers and specify position where notification will show up

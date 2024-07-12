@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../_models/user';
 import { map } from 'rxjs';
+import { environment } from '../../environments/environment';
 //this is to inject into components
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class AccountService {
   //inject http
   private http = inject(HttpClient);
   //create property for baseUrl
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   //angular signal to store current user object
   currentUser = signal<User | null>(null); //user or null, initial value is null
 
