@@ -13,6 +13,7 @@ public class AutoMapperProfiles : Profile//add profile from automapper
             .ForMember(d => d.Age, o => o.MapFrom(s => s.DateOfBirth.CalculateAge()))//d = destination, o = option, s = source
             .ForMember(d => d.PhotoUrl, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsMain)!.Url));
         CreateMap<Photo, PhotoDto>();//create map from Photo to PhotoDto
+        CreateMap<MemberUpdateDto, AppUser>();//create map from MemberUpdateDto to AppUser
     }
 
 }
