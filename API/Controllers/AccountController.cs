@@ -2,7 +2,6 @@
 using System.Text;
 using API.Data;
 using API.DTOs;
-using API.Entities;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +42,9 @@ public class AccountController(DataContext context, ITokenService tokenService) 
     //inject LoginDto and call it loginDto, get password hass to compare with the password the user is providing in login request
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)//task > action find the first user that matches a criteria or return NULL
     {
-        var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+        var user = await context.Users
+        .Include(p => p.Photos)
+        .FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
         //add conditional if user is null return "invalid user"
         if(user == null) return Unauthorized("Invalid username");
         //Compare password in database with the one they have provided, pass key PasswordSalt
@@ -59,7 +60,8 @@ public class AccountController(DataContext context, ITokenService tokenService) 
         return new UserDto //return new UserDto
         {
             Username = user.UserName,
-            Token = tokenService.CreateToken(user)
+            Token = tokenService.CreateToken(user),
+            PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
         };
     }
 

@@ -23,8 +23,7 @@ export class AccountService {
       //pass type User in post
       map((user) => {
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user)); //if user store in local storage passing the key 'uer' and string function JSON
-          this.currentUser.set(user);
+          this.setCurrentUser(user);
         }
       })
     );
@@ -38,12 +37,16 @@ export class AccountService {
       //pass type User in post
       map((user) => {
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user)); //login the user as sonn as the register
-          this.currentUser.set(user); //set user
+          this.setCurrentUser(user);
         }
         return user;
       })
     );
+  }
+
+  setCurrentUser(user: User) {
+    localStorage.setItem('user', JSON.stringify(user)); //login the user as son as the register
+    this.currentUser.set(user); //set user
   }
 
   logout() {

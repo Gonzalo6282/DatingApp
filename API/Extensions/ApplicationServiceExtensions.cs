@@ -1,4 +1,5 @@
 ﻿using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -23,8 +24,13 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ITokenService, TokenService>();
         //add UserRepository service by adding interface IUserRepository and implementation class UserRepository
         services.AddScoped<IUserRepository, UserRepository>();
+        //add IPhotoService
+        services.AddScoped<IPhotoService, PhotoService>();
         //add AddAutoMapper service
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //add cloudinary service
+        services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+        
 
         return services;
     }

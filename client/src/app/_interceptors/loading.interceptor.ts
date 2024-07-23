@@ -1,7 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { BusyService } from '../_services/busy.service';
-import { environment } from '../../environments/environment';
 import { delay, finalize, identity } from 'rxjs';
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
