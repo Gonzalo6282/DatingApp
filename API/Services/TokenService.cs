@@ -22,7 +22,8 @@ public class TokenService(IConfiguration config) : ITokenService
        //cretae claim > new list of claims
        var claims = new List<Claim>
        {
-        new(ClaimTypes.NameIdentifier, user.UserName)
+        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new(ClaimTypes.Name, user.UserName)
        };
 
        //create creds > pass key > pass security algorithm to encrypt key

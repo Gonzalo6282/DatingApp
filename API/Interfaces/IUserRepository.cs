@@ -1,5 +1,6 @@
 ﻿using API.DTOs;
 using API.Entities;
+using API.Helpers;
 
 namespace API.Interfaces;
 
@@ -15,7 +16,7 @@ public interface IUserRepository
     //return user by username, make optional with ? so can return null if wont find user by username
     Task<AppUser?> GetUserByUsernameAsync(string username);
     //return collection of MemberDto and call it GetMemberAsync
-    Task<IEnumerable<MemberDto>> GetMembersAsync();
+    Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
     //return MemberDto by username
     Task<MemberDto?> GetMemberAsync(string username);
 
