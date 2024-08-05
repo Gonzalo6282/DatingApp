@@ -25,6 +25,6 @@ export class AppComponent implements OnInit {
     const userString = localStorage.getItem('user'); //check what is in local storage
     if (!userString) return; //if not userString breakout out of function
     const user = JSON.parse(userString); //parse userString
-    this.accountService.currentUser.set(user); //pass currentUsr signal
+    this.accountService.setCurrentUser(user); //pass currentUsr signal
   }
 }

@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../_models/user';
 import { map } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { LikesService } from './likes.service';
 //this is to inject into components
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,8 @@ import { environment } from '../../environments/environment';
 export class AccountService {
   //inject http
   private http = inject(HttpClient);
+  //inject like
+  private likeService = inject(LikesService);
   //create property for baseUrl
   baseUrl = environment.apiUrl;
   //angular signal to store current user object
@@ -52,5 +55,6 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user'); //remove user when logout
     this.currentUser.set(null); //set to null when logout
+    this.likeService.getLikeIds();
   }
 }

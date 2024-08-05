@@ -24,6 +24,8 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ITokenService, TokenService>();
         //add UserRepository service by adding interface IUserRepository and implementation class UserRepository
         services.AddScoped<IUserRepository, UserRepository>();
+        //add ILikesRepository
+        services.AddScoped<ILikesRepository, LikesRepository>();
         //add IPhotoService
         services.AddScoped<IPhotoService, PhotoService>();
         //add LogUserActivity
