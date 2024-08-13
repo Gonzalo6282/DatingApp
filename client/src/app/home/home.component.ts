@@ -9,10 +9,10 @@ import { RegisterComponent } from '../register/register.component';
   imports: [RegisterComponent],
 })
 export class HomeComponent {
-  registerMode = false; //to be use as conditional to show nuttons or form in home.componenets.html
+  registerMode = false;
 
   registerToggle() {
-    this.registerMode = !this.registerMode; //if is false will set it to true and if is true will set it to false
+    this.registerMode = !this.registerMode;
   }
 
   cancelRegisterMode(event: boolean) {

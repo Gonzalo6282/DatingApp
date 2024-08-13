@@ -1,31 +1,58 @@
-﻿using System.Text;
+﻿﻿using System.Text;
+using API.Data;
+using API.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Extensions;
 
-//static class allows to use methods inside this class without having to create a new instance of this class
 public static class IdentityServiceExtensions
 {
-
-    //add AddApplicationServices to the IServiceCollection
-    public static IServiceCollection AddIdentityervices(this IServiceCollection services, IConfiguration config)//say what it is what we are extending with "this" keyword and call it services 
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services,
+        IConfiguration config)
     {
-        //add Authentication
+        services.AddIdentityCore<AppUser>(opt =>
+        {
+            opt.Password.RequireNonAlphanumeric = false;
+        })
+            .AddRoles<AppRole>()
+            .AddRoleManager<RoleManager<AppRole>>()
+            .AddEntityFrameworkStores<DataContext>();
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {   //If not tokenkey  throw exception
-            var tokenKey = config["TokenKey"] ?? throw new Exception("TokenKey not found");
-            options.TokenValidationParameters = new TokenValidationParameters
+            .AddJwtBearer(options =>
             {
-                //this will accept any token regardless has been signed or not
-                ValidateIssuerSigningKey = true,
-                //what the issuersigningkey is validating against
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
-                ValidateIssuer = false,//we are not passing this to our token
-                ValidateAudience = false//we are not passing this to our token
-            };
-        });
+                var tokenKey = config["TokenKey"] ?? throw new Exception("TokenKey not found");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context => 
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+        services.AddAuthorizationBuilder()
+            .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
+            .AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
+        
         return services;
     }
 }

@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, input, Self } from '@angular/core';
+import { Component, Self, input } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -23,9 +23,10 @@ export class TextInputComponent implements ControlValueAccessor {
   }
 
   writeValue(obj: any): void {}
+
   registerOnChange(fn: any): void {}
+
   registerOnTouched(fn: any): void {}
-  setDisabledState?(isDisabled: boolean): void {}
 
   get control(): FormControl {
     return this.ngControl.control as FormControl;

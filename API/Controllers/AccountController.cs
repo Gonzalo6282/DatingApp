@@ -1,82 +1,62 @@
-﻿using System.Security.Cryptography;
+﻿﻿using System.Security.Cryptography;
 using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Entities;
-using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(DataContext context, ITokenService tokenService, IMapper mapper) : BaseApiController //add BaseApiController,  add ITokenService and call tokenService
+public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, 
+    IMapper mapper) : BaseApiController
 {
-    [HttpPost("register")] //account/register
-    //inject RegisterDto and call it registerDto to pass username and password 
-    public async Task<ActionResult<UserDto>>Register(RegisterDto registerDto)//task > action return a User after user has registered
+    [HttpPost("register")] // account/register
+    public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
-        //Add conditional passing UserExists() function and return BadRequest if username alrady exist
         if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
-
-        
-
-        using var hmac = new HMACSHA512();//randomly generated key
 
         var user = mapper.Map<AppUser>(registerDto);
 
-        user.UserName = registerDto.Username.ToLower();//Save in database as Tolower(), so we can later check that users can not use same username
+        user.UserName = registerDto.Username.ToLower();
 
-        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));//Create byte [] from password passed
+        var result = await userManager.CreateAsync(user, registerDto.Password);
 
-        user.PasswordSalt = hmac.Key;//Hash again to scramble twice the passwords
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
-        context.Users.Add(user);//add user to database 
-        await context.SaveChangesAsync();//save changes to database
-
-        return new UserDto //return new UserDto
+        return new UserDto
         {
             Username = user.UserName,
-            Token = tokenService.CreateToken(user),
+            Token = await tokenService.CreateToken(user),
             KnownAs = user.KnownAs,
             Gender = user.Gender
         };
     }
 
-    [HttpPost("login")]//create login endpoint
-    //inject LoginDto and call it loginDto, get password hass to compare with the password the user is providing in login request
-    public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)//task > action find the first user that matches a criteria or return NULL
+    [HttpPost("login")]
+    public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        var user = await context.Users
-        .Include(p => p.Photos)
-        .FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
-        //add conditional if user is null return "invalid user"
-        if(user == null) return Unauthorized("Invalid username");
-        //Compare password in database with the one they have provided, pass key PasswordSalt
-        using var hmac = new HMACSHA512(user.PasswordSalt);
+        var user = await userManager.Users
+            .Include(p => p.Photos)
+                .FirstOrDefaultAsync(x =>
+                    x.NormalizedUserName == loginDto.Username.ToUpper());
 
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));//Create byte [] from password passed to login
-        ///loop through computer hash array Compare password in database with the one they have provided
-        for (int i = 0; i < computedHash.Length; i++)
-        {   //if password is NOT the same as the one  in database return Invalid password
-            if(computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
-        }
-        //if they passwords match return user
-        return new UserDto //return new UserDto
+        if (user == null || user.UserName == null) return Unauthorized("Invalid username");
+
+        return new UserDto
         {
             Username = user.UserName,
             KnownAs = user.KnownAs,
-            Token = tokenService.CreateToken(user),
-            PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-            Gender = user.Gender
+            Token = await tokenService.CreateToken(user),
+            Gender = user.Gender,
+            PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
         };
     }
 
-
-    //check database to see if we already have a username with the same username.
-    private async Task<bool> UserExists(string username)//task > action bool True if username already exists
+    private async Task<bool> UserExists(string username)
     {
-        //chack if Any user with AnyAsync, this lambda will return true if username matches
-        return await context.Users.AnyAsync(x => x.UserName.ToLower() == username.ToLower());//make them lower to unseure that it is a match
+        return await userManager.Users.AnyAsync(x => x.NormalizedUserName == username.ToUpper()); // Bob != bob
     }
 }

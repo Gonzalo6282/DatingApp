@@ -1,38 +1,41 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms'; //add imports
-import { AccountService } from '../_services/account.service'; //add imports
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown'; //add imports
+import { FormsModule } from '@angular/forms';
+import { AccountService } from '../_services/account.service';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { HasRoleDirective } from '../_directives/has-role.directive';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [FormsModule, BsDropdownModule, RouterLink, RouterLinkActive], //add imports
+  imports: [
+    FormsModule,
+    BsDropdownModule,
+    RouterLink,
+    RouterLinkActive,
+    HasRoleDirective,
+  ],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
 })
 export class NavComponent {
-  //inject toastr service
-  private toastr = inject(ToastrService);
-  //inject http login method from account.service.ts
   accountService = inject(AccountService);
-  //inject router
   private router = inject(Router);
-  //create a model type any "empty"
+  private toastr = inject(ToastrService);
   model: any = {};
-  //create method login and store what is in model
+
   login() {
     this.accountService.login(this.model).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/members'); //when login route to members page
+      next: (_) => {
+        this.router.navigateByUrl('/members');
       },
-      error: (error) => this.toastr.error(error.error), //pass toastr to error
+      error: (error) => this.toastr.error(error.error),
     });
   }
-  //create funtion logout
+
   logout() {
     this.accountService.logout();
-    this.router.navigateByUrl('/'); //when logout route to home page
+    this.router.navigateByUrl('/');
   }
 }

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿﻿using System.Text.Json;
 using API.Helpers;
 
 namespace API.Extensions;
@@ -14,5 +14,4 @@ public static class HttpExtensions
         response.Headers.Append("Pagination", JsonSerializer.Serialize(paginationHeader, jsonOptions));
         response.Headers.Append("Access-Control-Expose-Headers", "Pagination");
     }
-
 }

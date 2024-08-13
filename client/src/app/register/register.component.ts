@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, output } from '@angular/core';
+import { Component, OnInit, inject, output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -16,24 +16,17 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, TextInputComponent, DatePickerComponent], //add import
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
+  imports: [ReactiveFormsModule, NgIf, TextInputComponent, DatePickerComponent],
 })
 export class RegisterComponent implements OnInit {
-  //inject FormBuilder service
-  private fb = inject(FormBuilder);
-  //inject accountService
   private accountService = inject(AccountService);
-  //inject router
+  private fb = inject(FormBuilder);
   private router = inject(Router);
-  //add signal cancel register in parent component
   cancelRegister = output<boolean>();
-  //create registerForm
   registerForm: FormGroup = new FormGroup({});
-  //create maxDate
   maxDate = new Date();
-  //create validationErrors
   validationErrors: string[] | undefined;
 
   ngOnInit(): void {
@@ -41,7 +34,6 @@ export class RegisterComponent implements OnInit {
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
 
-  //validators
   initializeForm() {
     this.registerForm = this.fb.group({
       gender: ['male'],
@@ -65,7 +57,6 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  //compare password to confirm password
   matchValues(matchTo: string): ValidatorFn {
     return (control: AbstractControl) => {
       return control.value === control.parent?.get(matchTo)?.value
@@ -74,7 +65,6 @@ export class RegisterComponent implements OnInit {
     };
   }
 
-  //create function register
   register() {
     const dob = this.getDateOnly(this.registerForm.get('dateOfBirth')?.value);
     this.registerForm.patchValue({ dateOfBirth: dob });
@@ -83,7 +73,7 @@ export class RegisterComponent implements OnInit {
       error: (error) => (this.validationErrors = error),
     });
   }
-  //create function cancel
+
   cancel() {
     this.cancelRegister.emit(false);
   }

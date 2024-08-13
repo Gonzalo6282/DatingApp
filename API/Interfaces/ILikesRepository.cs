@@ -1,4 +1,4 @@
-﻿﻿using API.DTOs;
+﻿﻿﻿using API.DTOs;
 using API.Entities;
 using API.Helpers;
 
@@ -11,6 +11,4 @@ public interface ILikesRepository
     Task<IEnumerable<int>> GetCurrentUserLikeIds(int currentUserId);
     void DeleteLike(UserLike like);
     void AddLike(UserLike like);
-    Task<bool> SaveChanges();
-
 }

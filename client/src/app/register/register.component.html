@@ -1,4 +1,4 @@
-<form [formGroup]="registerForm" (ngSubmit)="register()">
+<form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
   <h2 class="text-center text-primary">Sign up</h2>
   <hr />
 
@@ -79,7 +79,7 @@
   </div>
   }
 
-  <div class="form-group tex-center">
+  <div class="form-group text-center">
     <button
       [disabled]="!registerForm.valid"
       class="btn btn-success me-2"

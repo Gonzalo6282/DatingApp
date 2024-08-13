@@ -1,12 +1,12 @@
-import { inject, Injectable } from '@angular/core';
-import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
+import { Injectable, inject } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BusyService {
   busyRequestCount = 0;
-  private spinnerService = inject(NgxSpinnerService); //allows to start & stop spinner
+  private spinnerService = inject(NgxSpinnerService);
 
   busy() {
     this.busyRequestCount++;

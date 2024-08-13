@@ -1,21 +1,22 @@
-﻿using API.Data;
+﻿﻿using API.Controllers;
+using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers;
+namespace API;
 
 public class BuggyController(DataContext context) : BaseApiController
 {
     [Authorize]
     [HttpGet("auth")]
-    public ActionResult<string>GetAuth()
+    public ActionResult<string> GetAuth()
     {
         return "secret text";
     }
 
     [HttpGet("not-found")]
-    public ActionResult<AppUser>GetNotFound()///try to find a user that doesn't exist
+    public ActionResult<AppUser> GetNotFound()
     {
         var thing = context.Users.Find(-1);
 
@@ -25,17 +26,16 @@ public class BuggyController(DataContext context) : BaseApiController
     }
 
     [HttpGet("server-error")]
-    public ActionResult<AppUser>GetServerError()
+    public ActionResult<AppUser> GetServerError()
     {
-         var thing = context.Users.Find(-1) ?? throw new Exception ("A bad thing has happened");
-         
-         return thing;
-    } 
+        var thing = context.Users.Find(-1) ?? throw new Exception("A bad thing has happened");
+
+        return thing;
+    }
 
     [HttpGet("bad-request")]
-    public ActionResult<string>GetBadRequest()
+    public ActionResult<string> GetBadRequest()
     {
         return BadRequest("This was not a good request");
     }
-
 }

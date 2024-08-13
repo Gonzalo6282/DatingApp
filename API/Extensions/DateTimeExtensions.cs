@@ -1,20 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace API.Extensions;
+﻿﻿namespace API.Extensions;
 
 public static class DateTimeExtensions
 {
-    public static int CalculateAge(this DateOnly dob) 
-    {   //get todays date
+    public static int CalculateAge(this DateOnly dob)
+    {
         var today = DateOnly.FromDateTime(DateTime.Now);
 
-        //calculate age
         var age = today.Year - dob.Year;
 
-        //take into account if they had their birthdate or not
+        if (dob > today.AddYears(-age)) age--;
 
-        if(dob > today.AddYears(-age)) age--;
-        
         return age;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { LikesService } from '../_services/likes.service';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { FormsModule } from '@angular/forms';
@@ -8,9 +8,9 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 @Component({
   selector: 'app-lists',
   standalone: true,
-  imports: [ButtonsModule, FormsModule, MemberCardComponent, PaginationModule],
   templateUrl: './lists.component.html',
   styleUrl: './lists.component.css',
+  imports: [ButtonsModule, FormsModule, MemberCardComponent, PaginationModule],
 })
 export class ListsComponent implements OnInit, OnDestroy {
   likesService = inject(LikesService);

@@ -1,12 +1,11 @@
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
-import { inject, Injectable, model, signal } from '@angular/core';
+import { Injectable, inject, model, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Member } from '../_models/member';
 import { of, tap } from 'rxjs';
 import { Photo } from '../_models/photo';
 import { PaginatedResult } from '../_models/pagination';
 import { UserParams } from '../_models/userParams';
-import { object } from 'joi';
 import { AccountService } from './account.service';
 import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
 
@@ -20,7 +19,7 @@ export class MembersService {
   paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
   memberCache = new Map();
   user = this.accountService.currentUser();
-  userParams = signal<UserParams>(new UserParams(this.user));
+  userParams = model<UserParams>(new UserParams(this.user));
 
   resetUserParams() {
     this.userParams.set(new UserParams(this.user));
@@ -57,8 +56,6 @@ export class MembersService {
   }
 
   getMember(username: string) {
-    // const member = this.members().find((x) => x.username === username);
-    // if (member !== undefined) return of(member);
     const member: Member = [...this.memberCache.values()]
       .reduce((arr, elem) => arr.concat(elem.body), [])
       .find((m: Member) => m.username === username);
@@ -73,9 +70,8 @@ export class MembersService {
       .put(this.baseUrl + 'users', member)
       .pipe
       // tap(() => {
-      //   this.members.update((members) =>
-      //     members.map((m) => (m.username === member.username ? member : m))
-      //   );
+      //   this.members.update(members => members.map(m => m.username === member.username
+      //       ? member : m))
       // })
       ();
   }
@@ -85,14 +81,12 @@ export class MembersService {
       .put(this.baseUrl + 'users/set-main-photo/' + photo.id, {})
       .pipe
       // tap(() => {
-      //   this.members.update((members) =>
-      //     members.map((m) => {
-      //       if (m.photos.includes(photo)) {
-      //         m.photoUrl = photo.url;
-      //       }
-      //       return m;
-      //     })
-      //   );
+      //   this.members.update(members => members.map(m => {
+      //     if (m.photos.includes(photo)) {
+      //       m.photoUrl = photo.url
+      //     }
+      //     return m;
+      //   }))
       // })
       ();
   }
@@ -102,14 +96,12 @@ export class MembersService {
       .delete(this.baseUrl + 'users/delete-photo/' + photo.id)
       .pipe
       // tap(() => {
-      //   this.members.update((members) =>
-      //     members.map((m) => {
-      //       if (m.photos.includes(photo)) {
-      //         m.photos = m.photos.filter((x) => x.id !== photo.id);
-      //       }
-      //       return m;
-      //     })
-      //   );
+      //   this.members.update(members => members.map(m => {
+      //     if (m.photos.includes(photo)) {
+      //       m.photos = m.photos.filter(x => x.id !== photo.id)
+      //     }
+      //     return m
+      //   }))
       // })
       ();
   }

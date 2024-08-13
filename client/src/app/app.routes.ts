@@ -1,26 +1,26 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
-import { MessagesComponent } from './messages/messages.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { ListsComponent } from './lists/lists.component';
-import { authGuard } from './_guard/auth.guard';
+import { MessagesComponent } from './messages/messages.component';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
-import { preventUnsavedChangesGuard } from './_guard/prevent-unsaved-changes.guard';
 import { memberDetailedResolver } from './_resolvers/member-detailed.resolver';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { adminGuard } from './_guard/admin.guard';
+import { authGuard } from './_guard/auth.guard';
+import { preventUnsavedChangesGuard } from './_guard/prevent-unsaved-changes.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  //dummy route, pass all paths that need authGuard
   {
     path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
     children: [
-      { path: 'lists', component: ListsComponent },
       { path: 'members', component: MemberListComponent },
       {
         path: 'members/:username',
@@ -32,13 +32,17 @@ export const routes: Routes = [
         component: MemberEditComponent,
         canDeactivate: [preventUnsavedChangesGuard],
       },
+      { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent },
+      {
+        path: 'admin',
+        component: AdminPanelComponent,
+        canActivate: [adminGuard],
+      },
     ],
   },
-
   { path: 'errors', component: TestErrorsComponent },
   { path: 'not-found', component: NotFoundComponent },
   { path: 'server-error', component: ServerErrorComponent },
-
   { path: '**', component: HomeComponent, pathMatch: 'full' },
 ];
