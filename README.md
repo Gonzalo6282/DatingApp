@@ -1,5 +1,5 @@
 # DatingApp
-Using .NET, C# and Bootstrap I've learnt to build a dating app website. The dating app website allows users to see create a profile, filter, like, match and contact other users.
+Using .NET, C# and Bootstrap I've built a dating app website. The dating app website allows users to create a profile, filter, like, match and contact other users.
 
 [Live demo](https://datingapp-bsecewa7fgh8d0ft.uksouth-01.azurewebsites.net/)
 
