@@ -1,5 +1,5 @@
 # DatingApp
-Using Javacript, Html, Css & Materialize I've learnt to build a single page scrolling website. The Photography business website allows users to see the services provided and get in touch with the business owner.
+Using .NET, C# and Bootstrap I've learnt to build a dating app website. The dating app website allows users to see create a profile, filter, like, match and contact other users.
 
 [Live demo](https://datingapp-bsecewa7fgh8d0ft.uksouth-01.azurewebsites.net/)
 
